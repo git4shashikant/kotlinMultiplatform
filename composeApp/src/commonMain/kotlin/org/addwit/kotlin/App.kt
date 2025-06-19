@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,12 +25,20 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import kotlinmultiplatform.composeapp.generated.resources.Res
 import kotlinmultiplatform.composeapp.generated.resources.compose_multiplatform
+import kotlinmultiplatform.composeapp.generated.resources.eg
+import kotlinmultiplatform.composeapp.generated.resources.fr
+import kotlinmultiplatform.composeapp.generated.resources.id
+import kotlinmultiplatform.composeapp.generated.resources.`in`
+import kotlinmultiplatform.composeapp.generated.resources.jp
+import kotlinmultiplatform.composeapp.generated.resources.mx
+import kotlinmultiplatform.composeapp.generated.resources.sv
 import kotlinx.datetime.Clock
 import kotlinx.datetime.IllegalTimeZoneException
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.DrawableResource
 
 @Composable
 @Preview
@@ -61,9 +70,16 @@ fun App() {
                     expanded = showDropdown,
                     onDismissRequest = { showDropdown = false}
                 ) {
-                    countries.forEach { (name, zone) ->
+                    countries.forEach { (name, zone, img) ->
                         DropdownMenuItem(
-                            text = {   Text(name)},
+                            text = { Row(verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    painterResource(img),
+                                    modifier = Modifier.size(50.dp).padding(end = 10.dp),
+                                    contentDescription = "$name flag"
+                                )
+                                Text(name)
+                            }},
                             onClick = {
                                 location = "$name $zone"
                                 timeAtLocation = currentTimeAt(zone)
@@ -97,13 +113,15 @@ fun App() {
     }
 }
 
-data class Country(val name: String, val zone: String)
+data class Country(val name: String, val zone: String, val img: DrawableResource)
 val countries = listOf(
-    Country("Japan", "Asia/Tokyo"),
-        Country("France", "Europe/Paris"),
-    Country("Mexico", "America/Mexico_City"),
-    Country("Indonesia", "Asia/Jakarta"),
-    Country("Egypt", "Africa/Cairo"),
+    Country("Egypt", "Africa/Cairo", Res.drawable.eg),
+    Country("France", "Europe/Paris", Res.drawable.fr),
+    Country("India", "Asia/Kolkata", Res.drawable.`in`),
+    Country("Indonesia", "Asia/Jakarta", Res.drawable.id),
+    Country("Japan", "Asia/Tokyo", Res.drawable.jp),
+    Country("Mexico", "America/Mexico_City", Res.drawable.mx),
+    Country("Sweden", "Europe/Stockholm", Res.drawable.sv),
 )
 
 fun todayDate(): String {
